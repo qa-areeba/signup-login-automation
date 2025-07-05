@@ -4,10 +4,12 @@ import com.incubyte.pages.SignupPage;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.time.Duration;
+import java.util.UUID;
 
 /**
  * Test class for verifying Magento Signup functionality with explicit waits.
@@ -22,9 +24,16 @@ public class SignupPageTest {
      */
     @BeforeEach
     public void setup() {
-        driver = new ChromeDriver();  // Launch Chrome browser
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--user-data-dir=/tmp/profile-" + UUID.randomUUID());
+
+        driver = new ChromeDriver(options);  // Launch Chrome with isolated profile
         driver.manage().window().maximize(); // Open browser in full-screen mode
         driver.get("https://magento.softwaretestingboard.com/customer/account/create/"); // Open Magento signup page
+
         signupPage = new SignupPage(driver); // Initialize SignupPage object
         wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Wait up to 10 seconds for elements
     }
